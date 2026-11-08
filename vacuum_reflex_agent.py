@@ -1,18 +1,23 @@
 class VacuumReflexAgent:
     def __init__(self):
-        self.location = 2  # percept
-        self.environment = ['dirty', 'clean', 'dirty', 'dirty']  # 2x2 grid: [0,0] [0,1] [1,0] [1,1]
+        self.location = (1, 0)  # percept
+        self.environment = [['dirty', 'clean'], ['dirty', 'dirty']]
 
     def interpret_input(self):
-        return self.environment[self.location]  # state
+        return self.environment[self.location[0]][self.location[1]]  # state
 
     def rule_action(self, state):
         if state == 'dirty':
             print("Cleaning cell", self.location)
-            self.environment[self.location] = 'clean'
+            self.environment[self.location[0]][self.location[1]] = 'clean'
         else:
             print("Moving to the next cell")
-            self.location = (self.location + 1) % len(self.environment)
+            row, col = self.location
+            col += 1
+            if col == len(self.environment[0]):
+                col = 0
+                row = (row + 1) % len(self.environment)
+            self.location = (row, col)
 
 
 agent = VacuumReflexAgent()

@@ -1,13 +1,13 @@
 class TemperatureAgent:
     def __init__(self):
-        self.environment = [17, 24]
-        self.position = 0
+        self.environment = [[17, 24], [17, 24]]
+        self.position = (0, 0)
         self.target = 20
         self.step = 0.5
         self.model = {}
 
     def perceive(self):
-        return self.environment[self.position]
+        return self.environment[self.position[0]][self.position[1]]
 
     def update_model(self, perception):
         self.model[self.position] = perception
@@ -41,15 +41,20 @@ class TemperatureAgent:
 
     def act(self, action):
         if action == 'heat':
-            self.environment[self.position] += self.step
+            self.environment[self.position[0]][self.position[1]] += self.step
         elif action == 'cool':
-            self.environment[self.position] -= self.step
+            self.environment[self.position[0]][self.position[1]] -= self.step
         elif action == 'move':
-            self.position = (self.position + 1) % len(self.environment)
+            row, col = self.position
+            col += 1
+            if col == len(self.environment[0]):
+                col = 0
+                row = (row + 1) % len(self.environment)
+            self.position = (row, col)
 
 
 agent = TemperatureAgent()
-for _ in range(16):
+for _ in range(32):
     action = agent.decide_action()
     agent.act(action)
     print(f"Position: {agent.position}, Action: {action}, Environment: {agent.environment}, Model: {agent.model}")

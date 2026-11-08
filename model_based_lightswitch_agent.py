@@ -1,11 +1,11 @@
 class LightSwitchAgent:
     def __init__(self):
-        self.environment = ['on', 'off', 'on', 'on']
-        self.position = 0
+        self.environment = [['on', 'off'], ['on', 'on']]
+        self.position = (0, 0)
         self.model = {}
 
     def perceive(self):
-        return self.environment[self.position]
+        return self.environment[self.position[0]][self.position[1]]
 
     def update_model(self, perception):
         self.model[self.position] = perception
@@ -32,9 +32,14 @@ class LightSwitchAgent:
 
     def act(self, action):
         if action == 'toggle':
-            self.environment[self.position] = 'off'
+            self.environment[self.position[0]][self.position[1]] = 'off'
         elif action == 'move':
-            self.position = (self.position + 1) % len(self.environment)
+            row, col = self.position
+            col += 1
+            if col == len(self.environment[0]):
+                col = 0
+                row = (row + 1) % len(self.environment)
+            self.position = (row, col)
 
 
 agent = LightSwitchAgent()

@@ -1,27 +1,33 @@
 class TemperatureAgent:
     def __init__(self):
-        self.environment = [17, 24]  # initial temperature of two rooms
-        self.target = 20  # goal temperature
-        self.step = 0.5  # temperature change per action
+        self.location = (0, 0)  # percept
+        self.environment = [[17, 24], [17, 24]]
+        self.target = 20
+        self.step = 0.5
 
-    def interpret_input(self, room):
-        return self.environment[room]  # state
+    def interpret_input(self):
+        return self.environment[self.location[0]][self.location[1]]  # state
 
-    def rule_action(self, room, state):
+    def rule_action(self, state):
         if state < self.target:
-            print("Turning on heater in room", room, "->", state + self.step)
-            self.environment[room] += self.step
+            print("Turning on heater in room", self.location, "->", state + self.step)
+            self.environment[self.location[0]][self.location[1]] += self.step
         elif state > self.target:
-            print("Turning on cooler in room", room, "->", state - self.step)
-            self.environment[room] -= self.step
+            print("Turning on cooler in room", self.location, "->", state - self.step)
+            self.environment[self.location[0]][self.location[1]] -= self.step
         else:
-            print("Room", room, "is at target temperature")
+            print("Moving to the next room")
+            row, col = self.location
+            col += 1
+            if col == len(self.environment[0]):
+                col = 0
+                row = (row + 1) % len(self.environment)
+            self.location = (row, col)
 
 
 agent = TemperatureAgent()
-print("Initial temperatures:", agent.environment)
-for _ in range(8):
-    for room in range(len(agent.environment)):
-        state = agent.interpret_input(room)
-        agent.rule_action(room, state)
-print("Final temperatures:", agent.environment)
+print("Initial environment:", agent.environment)
+for _ in range(32):
+    state = agent.interpret_input()
+    agent.rule_action(state)
+print("Final environment:", agent.environment)
