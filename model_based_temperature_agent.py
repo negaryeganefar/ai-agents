@@ -1,9 +1,9 @@
 class TemperatureAgent:
     def __init__(self):
-        self.environment = [17, 24]  # initial temperature of two rooms
+        self.environment = [17, 24]
         self.position = 0
-        self.target = 20  # goal temperature
-        self.step = 0.5  # temperature change per action
+        self.target = 20
+        self.step = 0.5
         self.model = {}
 
     def perceive(self):
@@ -13,12 +13,14 @@ class TemperatureAgent:
         self.model[self.position] = perception
 
     def predict_future_state(self):
-        # Use the internal model to predict the state of this room
         if self.model.get(self.position) < self.target:
+            # If the room is colder than the target, predict it is cold
             return 'cold'
         elif self.model.get(self.position) > self.target:
+            # If the room is hotter than the target, predict it is hot
             return 'hot'
         else:
+            # Otherwise, predict it will be at the target
             return 'target'
 
     def decide_action(self):
@@ -47,9 +49,7 @@ class TemperatureAgent:
 
 
 agent = TemperatureAgent()
-print("Initial temperatures:", agent.environment)
-for _ in range(18):
+for _ in range(16):
     action = agent.decide_action()
     agent.act(action)
     print(f"Position: {agent.position}, Action: {action}, Environment: {agent.environment}, Model: {agent.model}")
-print("Final temperatures:", agent.environment)

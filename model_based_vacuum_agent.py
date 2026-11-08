@@ -1,6 +1,6 @@
 class ModelBasedVacuumCleaner:
     def __init__(self):
-        self.environment = ['dirty', 'clean', 'dirty', 'dirty']  # 2x2 grid: [0,0] [0,1] [1,0] [1,1]
+        self.environment = ['dirty', 'clean', 'dirty', 'dirty']
         self.position = 0
         self.model = {}
 
@@ -11,10 +11,11 @@ class ModelBasedVacuumCleaner:
         self.model[self.position] = perception
 
     def predict_future_state(self):
-        # Use the internal model to predict the state of this cell
         if self.model.get(self.position) == 'dirty':
+            # If the current cell is dirty, predict it will remain dirty
             return 'dirty'
         else:
+            # Otherwise, predict it will be clean
             return 'clean'
 
     def decide_action(self):
@@ -37,9 +38,7 @@ class ModelBasedVacuumCleaner:
 
 
 agent = ModelBasedVacuumCleaner()
-print("Initial environment:", agent.environment)
-for _ in range(8):
+for _ in range(6):
     action = agent.decide_action()
     agent.act(action)
     print(f"Position: {agent.position}, Action: {action}, Environment: {agent.environment}, Model: {agent.model}")
-print("Final environment:", agent.environment)

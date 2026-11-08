@@ -1,6 +1,6 @@
 class LightSwitchAgent:
     def __init__(self):
-        self.environment = ['on', 'off', 'on', 'on']  # 2x2 grid: [0,0] [0,1] [1,0] [1,1]
+        self.environment = ['on', 'off', 'on', 'on']
         self.position = 0
         self.model = {}
 
@@ -11,10 +11,11 @@ class LightSwitchAgent:
         self.model[self.position] = perception
 
     def predict_future_state(self):
-        # Use the internal model to predict the state of this cell
         if self.model.get(self.position) == 'on':
+            # If the light is on, predict it will remain on
             return 'on'
         else:
+            # Otherwise, predict it will be off
             return 'off'
 
     def decide_action(self):
@@ -37,9 +38,7 @@ class LightSwitchAgent:
 
 
 agent = LightSwitchAgent()
-print("Initial environment:", agent.environment)
-for _ in range(8):
+for _ in range(6):
     action = agent.decide_action()
     agent.act(action)
     print(f"Position: {agent.position}, Action: {action}, Environment: {agent.environment}, Model: {agent.model}")
-print("Final environment:", agent.environment)
